@@ -1,0 +1,2 @@
+# HrDatabaseMangerSystem
+基于layui框架的人事资源管理系统
