@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hg.mapper.CountsMapper" >
+    <resultMap id="BaseResultMap" type="com.hg.pojo.Counts" >
+        <id column="userCount" property="userCount" jdbcType="INTEGER" />
+        <id column="deptCount" property="deptCount" jdbcType="INTEGER" />
+        <id column="jobCount" property="jobCount" jdbcType="INTEGER" />
+        <id column="employeeCount" property="employeeCount" jdbcType="INTEGER" />
+        <id column="noticeCount" property="noticeCount" jdbcType="INTEGER" />
+        <id column="uploadfileCount" property="uploadfileCount" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="selectCounts" resultMap="BaseResultMap">
+        SELECT t1.userCount,t2.deptCount,t3.jobCount,t4.employeeCount,t5.noticeCount,t6.uploadfileCount from
+        (SELECT count(*) userCount from user) t1,
+        (SELECT count(*) deptCount from dept) t2,
+        (SELECT count(*) jobCount from job) t3,
+        (SELECT count(*) employeeCount from employee) t4,
+        (SELECT count(*) noticeCount from notice) t5,
+        (SELECT count(*) uploadfileCount from uploadfile) t6
+    </select>
+
+</mapper>

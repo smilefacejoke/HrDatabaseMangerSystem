@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <script src="./layui/layui.js"></script>
+</head>
+<body style="margin-top: 30px;margin-left: 60px">
+
+<div class="layui-bg-gray" style="margin-left: 30px">
+    <form class="layui-form layui-form-pane" action="" method="post" id="demo1">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <i class="layui-icon layui-icon-user"></i>
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="number" lay-verify="required" placeholder="请输入账号" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <i class="layui-icon layui-icon-password"></i>
+            </label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" lay-verify="required" placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <i class="layui-icon layui-icon-password"></i>
+            </label>
+            <div class="layui-input-inline">
+                <input type="password" name="pw" lay-verify="required|equalpw" placeholder="请再次确认密码" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <i class="layui-icon layui-icon-username"></i>
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" lay-verify="required" placeholder="请输入昵称" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <i class="layui-icon layui-icon-cellphone"></i>
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="phone" id="phonetext" lay-verify="required|phone|phonecheck" placeholder="请输入电话" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <i class="layui-icon layui-icon-vercode"></i>
+            </label>
+            <div class="layui-input-label">
+                <span class="layui-input-inline" style="width: 100px">
+                    <input type="text" name="checkcode" lay-verify="required" placeholder="请输入" autocomplete="off"
+                       class="layui-input" style="width: 100px">
+                </span>
+                <a href="javascript:void(0);" id="checkcode" >
+                    <img id="imgcode" src="CheckCode" width="70px" height="35px" alt="" style="border: 1px #000000 solid ">
+                </a>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="width: 300px;margin-left: -0px">
+                <button  class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo1">注册</button>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+</body>
+<script>
+
+
+    layui.use(['form', 'layer','layedit', 'laydate','jquery'], function() {
+        var $ = layui.jquery
+            , form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+
+        $("#checkcode").click(function () {
+
+            $("#imgcode").attr("src","CheckCode?time"+new Date().getTime());
+        });
+
+
+        //自定义验证规则
+        form.verify({
+            equalpw:function (value) {
+                if($('input[name=password]').val()!==value){
+                    return '两次输入的密码不一致';
+                }
+            },
+            phonecheck:function (value) {
+                //要用ajax技术，异步加载，局部刷新
+                //jq：ajax(),load(),post()
+                //构建json数据
+                var json = {"phoneString": value};
+                //三个参数:url:提交数据的地址,json：要提交的数据,function
+                //设置ajax同步
+                var flag = false;
+                $.ajaxSettings.async = false;
+                $.post("checkPhone", json, function (data) {
+                    if (data == "1") {
+                        flag = true;
+                    }
+                });
+                if (flag) {
+                    return "该手机号已被注册！"
+                }
+            }
+        });
+
+
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            var checkcodeText=data.field.checkcode;
+            var json={"checkcode":checkcodeText,"json":JSON.stringify(data.field)};
+
+            //用ajax完成后台数据交互
+            $.post("registerUser",json,function (data) {
+
+                if(data==0){
+                    layer.msg("验证错误",{icon:5});
+                }else if (data==1){
+                    layer.msg("恭喜，注册成功",{icon:1});
+                }else {
+                    layer.msg("注册失败,请检查",{icon:5});
+                }
+            })
+            return false;
+        });
+
+        //表单取值
+        layui.$('#LAY-component-form-getval').on('click', function(){
+            var data = form.val('example');
+            alert(JSON.stringify(data));
+        });
+
+    });
+</script>
+</html>
