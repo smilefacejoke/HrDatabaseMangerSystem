@@ -133,9 +133,9 @@
             //获取登录的数据
             var login="${loginInfo}";
             if(login!=""){
-             }
-
-
+                layer.msg(login,{icon:5});
+            }
+        
             //触发事件
         var active = {
             notice: function(){
