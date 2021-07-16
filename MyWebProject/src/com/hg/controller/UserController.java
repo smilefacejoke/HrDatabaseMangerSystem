@@ -46,12 +46,8 @@ public class UserController {
         if(checkcode.equalsIgnoreCase(checkcodeSession)){
             //如果验证成功应该去Service层完成登录的基本功能
             System.out.println("验证成功");
-
             //将用户名和密码提交给service层
-
             User user=userService.login( username, password);
-
-
             if(user!=null){
                 //登录成功
                 //将用户对象放到session中，供主界面访问
@@ -62,7 +58,7 @@ public class UserController {
                 HttpSession session1=request.getSession();
                 session1.setAttribute("user",user);
                 session.setAttribute("counts",counts);
-                System.out.println("11111111");
+                loginInfo="1";
                 return "main";
             }else
                 loginInfo="用户名或密码错误";

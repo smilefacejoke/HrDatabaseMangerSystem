@@ -22,10 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(String username, String password) {
         //操作dao层，用的是逆向工程，所有dao层都不用写
-
-
         //User user= userMapper.selectByPrimaryKey(username);
-
         UserExample example=new UserExample();
         example.or().andNumberEqualTo(username);//可以通过number(主键）登录
         example.or().andPhoneEqualTo(username);//手机号登录
